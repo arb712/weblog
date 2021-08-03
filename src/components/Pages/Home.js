@@ -2,6 +2,11 @@ import React, { Component } from "react";
 import Header from "../Common/Header";
 import backImg from "../assets/img/header-bg.jpg";
 
+// Re-usable component
+import Services from "../Common/Services";
+import Portfolio from "../Common/Portfolio";
+import PortfolioItem from "../Common/PortfolioItem";
+
 class Home extends Component {
   render() {
     return (
@@ -14,6 +19,8 @@ class Home extends Component {
           showButton={true}
           image={backImg}
         />
+        <Services />
+        <Portfolio />
       </>
     );
   }
