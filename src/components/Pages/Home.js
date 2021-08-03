@@ -1,22 +1,20 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import Header from "../Common/Header";
+import backImg from "../assets/img/header-bg.jpg";
+
 class Home extends Component {
   render() {
     return (
-      <header className="masthead">
-        <div className="container">
-          <div className="masthead-subheading">Welcome To Our Studio!</div>
-          <div className="masthead-heading text-uppercase">
-            It's Nice To Meet You
-          </div>
-          <Link
-            className="btn btn-primary btn-xl text-uppercase"
-            to="/services"
-          >
-            Tell Me More
-          </Link>
-        </div>
-      </header>
+      <>
+        <Header
+          title="Welcome To Our Studio!"
+          subTitle="IT'S NICE TO MEET YOU"
+          buttonHeader="TELL ME MORE"
+          link="/services"
+          showButton={true}
+          image={backImg}
+        />
+      </>
     );
   }
 }

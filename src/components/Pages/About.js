@@ -1,9 +1,17 @@
 import React, { Component } from "react";
+import Header from "../Common/Header";
+import aboutImg from "../../components/assets/img/about.png";
 
 class About extends Component {
   render() {
     return (
       <>
+        <Header
+          title="About Us"
+          subTitle="It's really a great story."
+          showButton={false}
+          image={aboutImg}
+        />
         <section className="page-section" id="about">
           <div className="container">
             <div className="text-center">
