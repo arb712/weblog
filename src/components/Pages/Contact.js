@@ -1,4 +1,39 @@
 import React, { Component } from "react";
+import Field from "../Common/Field";
+import { withFormik } from "formik";
+
+const fields = {
+  sections: [
+    [
+      {
+        name: "name",
+        elementName: "input",
+        type: "text",
+        placeholder: "Your name*",
+      },
+      {
+        name: "email",
+        elementName: "input",
+        type: "text",
+        placeholder: "Your email*",
+      },
+      {
+        name: "phone",
+        elementName: "input",
+        type: "text",
+        placeholder: "Your phone number*",
+      },
+    ],
+    [
+      {
+        name: "message",
+        elementName: "textarea",
+        type: "text",
+        placeholder: "Type your message*",
+      },
+    ],
+  ],
+};
 
 class Contact extends Component {
   constructor(props) {
@@ -11,6 +46,10 @@ class Contact extends Component {
       message: "",
     };
   }
+  submitForm = (e) => {
+    e.preventDefault();
+    alert("Message has been sent, Thank you.");
+  };
   render() {
     return (
       <>
@@ -23,86 +62,33 @@ class Contact extends Component {
               </h3>
             </div>
             <form id="contactForm" data-sb-form-api-token="API_TOKEN">
-              <div className="row align-items-stretch mb-5">
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <input
-                      className="form-control"
-                      id="name"
-                      type="text"
-                      placeholder="Your Name *"
-                      data-sb-validations="required"
-                      value={this.state.name}
-                      onChange={(e) => this.setState({ name: e.target.value })}
-                    />
-                    <div
-                      className="invalid-feedback"
-                      data-sb-feedback="name:required"
-                    >
-                      A name is required.
+              <div className="form-group">
+                {fields.sections.map((sections, sectionIndex) => {
+                  console.log(
+                    "Rendering Section",
+                    sectionIndex,
+                    "with",
+                    sections
+                  );
+                  return (
+                    <div className="cold-md-6" key={sectionIndex}>
+                      {sections.map((field, index) => {
+                        return (
+                          <Field
+                            {...field}
+                            key={index}
+                            value={this.state[field.name]}
+                            onChange={(e) =>
+                              this.setState({
+                                [field.name]: e.target.value,
+                              })
+                            }
+                          />
+                        );
+                      })}
                     </div>
-                  </div>
-                  <div className="form-group">
-                    <input
-                      className="form-control"
-                      id="email"
-                      type="email"
-                      placeholder="Your Email *"
-                      data-sb-validations="required,email"
-                      value={this.state.email}
-                      onChange={(e) => this.setState({ email: e.target.value })}
-                    />
-                    <div
-                      className="invalid-feedback"
-                      data-sb-feedback="email:required"
-                    >
-                      An email is required.
-                    </div>
-                    <div
-                      className="invalid-feedback"
-                      data-sb-feedback="email:email"
-                    >
-                      Email is not valid.
-                    </div>
-                  </div>
-                  <div className="form-group mb-md-0">
-                    <input
-                      className="form-control"
-                      id="phone"
-                      type="tel"
-                      placeholder="Your Phone *"
-                      data-sb-validations="required"
-                      value={this.state.phone}
-                      onChange={(e) => this.setState({ phone: e.target.value })}
-                    />
-                    <div
-                      className="invalid-feedback"
-                      data-sb-feedback="phone:required"
-                    >
-                      A phone number is required.
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group form-group-textarea mb-md-0">
-                    <textarea
-                      className="form-control"
-                      id="message"
-                      placeholder="Your Message *"
-                      data-sb-validations="required"
-                      value={this.state.message}
-                      onChange={(e) =>
-                        this.setState({ message: e.target.value })
-                      }
-                    ></textarea>
-                    <div
-                      className="invalid-feedback"
-                      data-sb-feedback="message:required"
-                    >
-                      A message is required.
-                    </div>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
 
               <div className="d-none" id="submitSuccessMessage">
@@ -124,9 +110,9 @@ class Contact extends Component {
 
               <div className="text-center">
                 <button
-                  className="btn btn-primary btn-xl text-uppercase disabled"
-                  id="submitButton"
+                  className="btn btn-primary btn-xl text-uppercase"
                   type="submit"
+                  onClick={(e) => this.submitForm(e)}
                 >
                   Send Message
                 </button>
@@ -139,4 +125,24 @@ class Contact extends Component {
   }
 }
 
-export default Contact;
+export default withFormik({
+  mapPropsToValues: () => ({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  }),
+  validate: (values) => {
+    const errors = {};
+
+    Object.keys(values).map((v) => {
+      if (!values[v]) {
+        errors[v] = "Required";
+      }
+    });
+    return errors;
+  },
+  handleSubmit: (values, { setSubmitting }) => {
+    alert("You've submitted the form.");
+  },
+})(Contact);
