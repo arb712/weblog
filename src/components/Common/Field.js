@@ -12,8 +12,9 @@ class Field extends Component {
               type={this.props.type}
               placeholder={this.props.placeholder}
               data-sb-validations="required"
-              value={this.props.value}
-              onChange={(e) => this.props.onChange(e)}
+              name={this.props.name}
+              onChange={this.props.onChange}
+              onBlur={this.props.onBlur}
             />
           ) : (
             <div class="form-group form-group-textarea mb-md-0">
@@ -23,11 +24,17 @@ class Field extends Component {
                 type={this.props.type}
                 placeholder={this.props.placeholder}
                 data-sb-validations="required"
-                value={this.props.value}
-                onChange={(e) => this.props.onChange(e)}
+                name={this.props.name}
+                onChange={this.props.onChange}
+                onBlur={this.props.onBlur}
               />
             </div>
           )}
+          <p className="help-block text-danger">
+            {this.props.touched && this.props.errors && (
+              <span>{this.props.errors}</span>
+            )}
+          </p>
         </div>
       </>
     );

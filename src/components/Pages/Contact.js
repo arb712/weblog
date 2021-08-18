@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Field from "../Common/Field";
 import { withFormik } from "formik";
+import * as Yup from "yup";
 
 const fields = {
   sections: [
@@ -46,10 +47,6 @@ class Contact extends Component {
       message: "",
     };
   }
-  submitForm = (e) => {
-    e.preventDefault();
-    alert("Message has been sent, Thank you.");
-  };
   render() {
     return (
       <>
@@ -61,7 +58,11 @@ class Contact extends Component {
                 Lorem ipsum dolor sit amet consectetur.
               </h3>
             </div>
-            <form id="contactForm" data-sb-form-api-token="API_TOKEN">
+            <form
+              id="contactForm"
+              onSubmit={this.props.handleSubmit}
+              data-sb-form-api-token="API_TOKEN"
+            >
               <div className="form-group">
                 {fields.sections.map((sections, sectionIndex) => {
                   console.log(
@@ -77,12 +78,12 @@ class Contact extends Component {
                           <Field
                             {...field}
                             key={index}
-                            value={this.state[field.name]}
-                            onChange={(e) =>
-                              this.setState({
-                                [field.name]: e.target.value,
-                              })
-                            }
+                            value={this.props.values[field.name]}
+                            name={field.name}
+                            onChange={this.props.handleChange}
+                            onBlur={this.props.handleBlur}
+                            touched={this.props.touched[field.name]}
+                            errors={this.props.errors[field.name]}
                           />
                         );
                       })}
@@ -112,7 +113,7 @@ class Contact extends Component {
                 <button
                   className="btn btn-primary btn-xl text-uppercase"
                   type="submit"
-                  onClick={(e) => this.submitForm(e)}
+                  // onClick={(e) => this.submitForm(e)}
                 >
                   Send Message
                 </button>
@@ -132,17 +133,24 @@ export default withFormik({
     phone: "",
     message: "",
   }),
-  validate: (values) => {
-    const errors = {};
-
-    Object.keys(values).map((v) => {
-      if (!values[v]) {
-        errors[v] = "Required";
-      }
-    });
-    return errors;
-  },
+  validationSchema: Yup.object().shape({
+    name: Yup.string()
+      .min(3, "Name must be longer than 3 word.")
+      .required("You must give us your name."),
+    email: Yup.string()
+      .email("You must give use a valid email.")
+      .required("Email is required"),
+    phone: Yup.string()
+      .typeError("That doesn't look like a phone number.")
+      .min(10, "Phone number must be more than or equal to 10")
+      .max(15, "Phone number must be less than or equal to 15")
+      .required("Phone number is required"),
+    message: Yup.string()
+      .min(50, "You need provide us more detailed information")
+      .required("Your message is required."),
+  }),
   handleSubmit: (values, { setSubmitting }) => {
-    alert("You've submitted the form.");
+    console.log("Values", values);
+    alert("You've submitted the form.", JSON.stringify(values));
   },
 })(Contact);
